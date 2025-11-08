@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import Swal from "sweetalert2";
+import { Link } from "react-router-dom";
 
 export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState({ email: "", password: "" });
 
-  const onSubmit = async (e) =>  {
+  const onSubmit = async (e) => {
     e.preventDefault();
     const form = new FormData(e.currentTarget);
     const email = String(form.get("email") || "").trim();
@@ -286,14 +287,15 @@ export default function Login() {
           </div>
 
           {/* Footer */}
-          <p className="mt-6 text-center text-sm text-slate-600 dark:text-slate-400">
-            ยังไม่มีบัญชี?{" "}
-            <a
-              href="#"
+
+          <p className="text-center text-sm text-gray-600 mt-6">
+            ยังไม่มีบัญชี?
+            <Link
+              to="/register"
               className="font-semibold text-indigo-600 hover:text-indigo-700 dark:text-indigo-400 dark:hover:text-indigo-300"
             >
               สมัครสมาชิก
-            </a>
+            </Link>
           </p>
         </motion.div>
       </div>

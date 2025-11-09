@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import Swal from "sweetalert2";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 export default function Login() {
+  const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState({ email: "", password: "" });
@@ -37,11 +38,48 @@ export default function Login() {
     const data = await res.json();
     if (res.status == 200) {
       setLoading(false);
-      Swal.fire({
-        icon: "success",
-        title: "เข้าสู่ระบบสำเร็จ",
-        text: data.message || "ยินดีต้อนรับกลับ!",
-      });
+      let userId = data.user.id;
+      let userEmail = data.user.email;
+      let userName = data.user.name;
+      let userLastname = data.user.lastname;
+      let userPhone = data.user.phone;
+      let userType = data.user.type;
+
+      if (Array.isArray(userId)) {
+        userId = userId[0];
+      }
+      if (userType === "0") {
+        Swal.fire({
+          icon: "error",
+          title: "เข้าสู่ระบบสำเร็จ",
+          text:
+            data.message +
+              "\n" +
+              userName +
+              " " +
+              userLastname +
+              "คุณไม่มีสิทธิ์การเข้าถึงกรุณาติดต่อผู้ดูแลระบบ" ||
+            "ยินดีต้อนรับกลับ!",
+        });
+      }
+      if (userType === "1") {
+        await Swal.fire({
+          icon: "success",
+          title: "เข้าสู่ระบบสำเร็จ",
+          text:
+            data.message + "" + userName + " " + userLastname ||
+            "ยินดีต้อนรับกลับ!",
+        });
+        const user = {
+          id: userId,
+          email: userEmail,
+          name: userName,
+          lastname: userLastname,
+          phone: userPhone,
+          type: userType,
+        };
+        navigate("/home", { state: { user: user } });
+      }
       return;
     }
     if (data.status === "error") {
@@ -63,15 +101,120 @@ export default function Login() {
     //   });
     // }, 900);
   };
+  const forgotPassword = () => {
+    Swal.fire({
+      title: "ลืมรหัสผ่าน",
+      text: "เมื่อคุณลืมรหัสผ่าน กรุณาติดต่อผู้ดูแลระบบ",
+      icon: "warning",
+      showCancelButton: false,
+      confirmButtonColor: "#3085d6",
+      confirmButtonText: "ยืนยัน",
+    });
+  };
+  const Privacynoti = () => {
+    Swal.fire({
+      icon: "warning",
+      title: "นโยบายความเป็นส่วนตัว",
+      html: `
+ <section class="privacy-policy">
+  <h2>นโยบายความเป็นส่วนตัว (Privacy Policy)</h2>
+  <p>เว็บไซต์นี้ให้ความสำคัญกับความเป็นส่วนตัวของผู้ใช้งาน และมุ่งมั่นในการปกป้องข้อมูลส่วนบุคคลของคุณอย่างปลอดภัย โปรดอ่านนโยบายนี้เพื่อเข้าใจวิธีการที่เราเก็บ ใช้ และปกป้องข้อมูลของคุณ</p>
+
+  <h3>1. ข้อมูลที่เราเก็บรวบรวม</h3>
+  <ul>
+    <li>ข้อมูลส่วนบุคคล เช่น ชื่อ, อีเมล, เบอร์โทรศัพท์, ที่อยู่</li>
+    <li>ข้อมูลการใช้งาน เช่น หน้าที่เข้าชม, เวลาที่ใช้บนเว็บไซต์, ประเภทอุปกรณ์, เบราว์เซอร์</li>
+    <li>ข้อมูลจากคุกกี้ (Cookies) และเทคโนโลยีติดตามอื่น ๆ เช่น Google Analytics, Facebook Pixel</li>
+  </ul>
+
+  <h3>2. วัตถุประสงค์ในการใช้ข้อมูล</h3>
+  <ul>
+    <li>ปรับปรุงประสบการณ์การใช้งานเว็บไซต์</li>
+    <li>วิเคราะห์พฤติกรรมผู้ใช้เพื่อพัฒนาเนื้อหาและบริการ</li>
+    <li>ส่งข่าวสาร โปรโมชั่น หรือการแจ้งเตือนที่เกี่ยวข้อง</li>
+    <li>ป้องกันการใช้งานที่ผิดกฎหมายหรือละเมิดเงื่อนไขการใช้บริการ</li>
+  </ul>
+
+  <h3>3. การเปิดเผยข้อมูล</h3>
+  <ul>
+    <li>ผู้ให้บริการด้านเทคโนโลยี เช่น ระบบวิเคราะห์ข้อมูล, ระบบส่งอีเมล</li>
+    <li>หน่วยงานราชการตามที่กฎหมายกำหนด</li>
+    <li>กรณีที่จำเป็นเพื่อปกป้องสิทธิ์หรือความปลอดภัยของเว็บไซต์</li>
+  </ul>
+
+  <h3>4. การใช้คุกกี้ (Cookies)</h3>
+  <ul>
+    <li>จดจำการตั้งค่าของผู้ใช้</li>
+    <li>วิเคราะห์การใช้งานเพื่อปรับปรุงประสิทธิภาพ</li>
+    <li>แสดงโฆษณาที่ตรงกับความสนใจของผู้ใช้</li>
+  </ul>
+  <p>ผู้ใช้สามารถตั้งค่าเบราว์เซอร์เพื่อปฏิเสธคุกกี้ได้ แต่บางฟีเจอร์อาจใช้งานไม่ได้เต็มที่</p>
+
+  <h3>5. ความปลอดภัยของข้อมูล</h3>
+  <p>เราใช้มาตรการด้านเทคนิคและการบริหารจัดการเพื่อปกป้องข้อมูลจากการเข้าถึงโดยไม่ได้รับอนุญาต การสูญหาย หรือการเปิดเผยโดยไม่ได้รับอนุญาต</p>
+
+  <h3>6. สิทธิของผู้ใช้งาน</h3>
+  <ul>
+    <li>ขอเข้าถึงหรือแก้ไขข้อมูลส่วนบุคคลของตน</li>
+    <li>ขอให้ลบข้อมูลหรือระงับการใช้ข้อมูลบางประเภท</li>
+    <li>ถอนความยินยอมในการรับข่าวสารหรือการติดตาม</li>
+  </ul>
+  <p>สามารถติดต่อเราได้ผ่านช่องทางที่ระบุไว้ในเว็บไซต์</p>
+
+  <h3>7. การเปลี่ยนแปลงนโยบาย</h3>
+  <p>เราขอสงวนสิทธิ์ในการปรับปรุงนโยบายนี้โดยไม่ต้องแจ้งล่วงหน้า โดยจะแสดงวันที่แก้ไขล่าสุดไว้ด้านล่าง</p>
+  <p><strong>วันที่แก้ไขล่าสุด:</strong> 9 พฤศจิกายน 2568</p>
+</section>`,
+    });
+  };
   const openPolicy = () => {
     Swal.fire({
       title: "ข้อตกลงการใช้งาน",
       html: `
         <p>โปรดอ่านข้อตกลงการใช้งานอย่างละเอียดก่อนใช้บริการของเรา...</p>
-        <p>1. ข้อกำหนดแรก...</p>
-        <p>2. ข้อกำหนดที่สอง...</p>
-        <p>3. ข้อกำหนดที่สาม...</p>
-        <p>...</p>
+        <p>1. การยอมรับข้อตกลง
+ผู้ใช้งานตกลงที่จะปฏิบัติตามข้อกำหนด เงื่อนไข และนโยบายต่าง ๆ ที่ระบุไว้ในเว็บไซต์นี้ หากไม่ยอมรับข้อตกลง กรุณาหยุดการใช้งานเว็บไซต์ทัน
+</p>
+        <p>2. การใช้งานเว็บไซต์
+- ห้ามใช้เว็บไซต์เพื่อวัตถุประสงค์ที่ผิดกฎหมาย หรือขัดต่อศีลธรรม
+- ห้ามกระทำการใด ๆ ที่อาจก่อให้เกิดความเสียหายต่อระบบ ความปลอดภัย หรือข้อมูลของเว็บไซต์
+- ห้ามใช้ข้อมูลจากเว็บไซต์เพื่อการค้าโดยไม่ได้รับอนุญาต
+3. การเก็บและใช้ข้อมูล
+- เว็บไซต์อาจเก็บข้อมูลส่วนบุคคลและพฤติกรรมการใช้งานตามที่ระบุไว้ใน นโยบายความเป็นส่วนตัว
+- ผู้ใช้งานตกลงให้เว็บไซต์ใช้ข้อมูลดังกล่าวเพื่อปรับปรุงบริการและประสบการณ์การใช้งาน
+4. ทรัพย์สินทางปัญญา
+- เนื้อหา รูปภาพ โลโก้ และองค์ประกอบทั้งหมดในเว็บไซต์เป็นทรัพย์สินของเจ้าของเว็บไซต์หรือผู้ให้สิทธิ์
+- ห้ามคัดลอก ดัดแปลง เผยแพร่ หรือใช้เพื่อการค้าโดยไม่ได้รับอนุญาต
+5. การเปลี่ยนแปลงข้อตกลง
+เว็บไซต์ขอสงวนสิทธิ์ในการเปลี่ยนแปลงข้อตกลงการใช้งานโดยไม่ต้องแจ้งให้ทราบล่วงหน้า โดยจะแสดงวันที่แก้ไขล่าสุดไว้ด้านล่าง
+วันที่แก้ไขล่าสุด: 9 พฤศจิกายน 2568
+
+หากเว็บไซต์ของคุณมีบริการเฉพาะ เช่น การสมัครสมาชิก การซื้อขาย หรือระบบล็อกอิน แจ้งผมเพิ่มเติมได้เลยครับ ผมจะช่วยปรับข้อตกลงให้เหมาะสมกับระบบของคุณมากขึ้น เช่นเพิ่มเงื่อนไขการชำระเงิน การยกเลิกบัญชี หรือข้อจำกัดความรับผิดชอบ.
+</p>
+        <p>3. การเก็บและใช้ข้อมูล
+- เว็บไซต์อาจเก็บข้อมูลส่วนบุคคลและพฤติกรรมการใช้งานตามที่ระบุไว้ใน นโยบายความเป็นส่วนตัว
+- ผู้ใช้งานตกลงให้เว็บไซต์ใช้ข้อมูลดังกล่าวเพื่อปรับปรุงบริการและประสบการณ์การใช้งาน
+4. ทรัพย์สินทางปัญญา
+- เนื้อหา รูปภาพ โลโก้ และองค์ประกอบทั้งหมดในเว็บไซต์เป็นทรัพย์สินของเจ้าของเว็บไซต์หรือผู้ให้สิทธิ์
+- ห้ามคัดลอก ดัดแปลง เผยแพร่ หรือใช้เพื่อการค้าโดยไม่ได้รับอนุญาต
+5. การเปลี่ยนแปลงข้อตกลง
+เว็บไซต์ขอสงวนสิทธิ์ในการเปลี่ยนแปลงข้อตกลงการใช้งานโดยไม่ต้องแจ้งให้ทราบล่วงหน้า โดยจะแสดงวันที่แก้ไขล่าสุดไว้ด้านล่าง
+วันที่แก้ไขล่าสุด: 9 พฤศจิกายน 2568
+
+หากเว็บไซต์ของคุณมีบริการเฉพาะ เช่น การสมัครสมาชิก การซื้อขาย หรือระบบล็อกอิน แจ้งผมเพิ่มเติมได้เลยครับ ผมจะช่วยปรับข้อตกลงให้เหมาะสมกับระบบของคุณมากขึ้น เช่นเพิ่มเงื่อนไขการชำระเงิน การยกเลิกบัญชี หรือข้อจำกัดความรับผิดชอบ.
+</p>
+        <p>4. ทรัพย์สินทางปัญญา
+- เนื้อหา รูปภาพ โลโก้ และองค์ประกอบทั้งหมดในเว็บไซต์เป็นทรัพย์สินของเจ้าของเว็บไซต์หรือผู้ให้สิทธิ์
+- ห้ามคัดลอก ดัดแปลง เผยแพร่ หรือใช้เพื่อการค้าโดยไม่ได้รับอนุญา
+</p>
+<p>
+5. การเปลี่ยนแปลงข้อตกลง
+เว็บไซต์ขอสงวนสิทธิ์ในการเปลี่ยนแปลงข้อตกลงการใช้งานโดยไม่ต้องแจ้งให้ทราบล่วงหน้า โดยจะแสดงวันที่แก้ไขล่าสุดไว้ด้านล่าง
+วันที่แก้ไขล่าสุด: 9 พฤศจิกายน 2568
+
+หากเว็บไซต์ของคุณมีบริการเฉพาะ เช่น การสมัครสมาชิก การซื้อขาย หรือระบบล็อกอิน แจ้งผมเพิ่มเติมได้เลยครับ ผมจะช่วยปรับข้อตกลงให้เหมาะสมกับระบบของคุณมากขึ้น เช่นเพิ่มเงื่อนไขการชำระเงิน การยกเลิกบัญชี หรือข้อจำกัดความรับผิดชอบ.
+
+</p>
       `,
       width: "600px",
       confirmButtonText: "ยอมรับ",
@@ -81,11 +224,11 @@ export default function Login() {
     openPolicy();
   }, []);
   return (
-    <div className="relative min-h-screen w-full overflow-hidden bg-gradient-to-br from-slate-50 via-white to-slate-100 dark:from-slate-900 dark:via-slate-950 dark:to-slate-900">
+    <div className="relative min-h-screen w-full overflow-hidden bg-linear-to-br from-slate-50 via-white to-slate-100 dark:from-slate-900 dark:via-slate-950 dark:to-slate-900">
       {/* Background decorative blobs */}
       <div className="pointer-events-none absolute inset-0 -z-10">
-        <div className="absolute -top-24 -left-24 h-80 w-80 rounded-full bg-gradient-to-tr from-indigo-400/30 to-sky-300/30 blur-3xl dark:from-indigo-700/30 dark:to-sky-500/20" />
-        <div className="absolute -bottom-32 -right-28 h-96 w-96 rounded-full bg-gradient-to-tr from-fuchsia-300/30 to-pink-300/30 blur-3xl dark:from-fuchsia-700/20 dark:to-pink-600/20" />
+        <div className="absolute -top-24 -left-24 h-80 w-80 rounded-full bg-linear-to-tr from-indigo-400/30 to-sky-300/30 blur-3xl dark:from-indigo-700/30 dark:to-sky-500/20" />
+        <div className="absolute -bottom-32 -right-28 h-96 w-96 rounded-full bg-linear-to-tr from-fuchsia-300/30 to-pink-300/30 blur-3xl dark:from-fuchsia-700/20 dark:to-pink-600/20" />
       </div>
 
       <div className="mx-auto flex min-h-screen max-w-7xl items-center justify-center px-4 py-12 sm:px-6 lg:px-8">
@@ -96,7 +239,7 @@ export default function Login() {
           className="w-full max-w-md"
         >
           <div className="mb-8 text-center">
-            <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-indigo-500 to-sky-500 shadow-lg shadow-indigo-500/25 ring-1 ring-white/50 dark:ring-white/10">
+            <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-linear-to-br from-indigo-500 to-sky-500 shadow-lg shadow-indigo-500/25 ring-1 ring-white/50 dark:ring-white/10">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 24 24"
@@ -114,7 +257,7 @@ export default function Login() {
             </p>
           </div>
 
-          <div className="rounded-2xl border border-slate-200/60 bg-white/80 p-6 shadow-xl shadow-slate-200/30 backdrop-blur supports-[backdrop-filter]:bg-white/60 dark:border-slate-700/60 dark:bg-slate-900/60 dark:shadow-black/30">
+          <div className="rounded-2xl border border-slate-200/60 bg-white/80 p-6 shadow-xl shadow-slate-200/30 backdrop-blur supports-backdrop-filter:bg-white/60 dark:border-slate-700/60 dark:bg-slate-900/60 dark:shadow-black/30">
             <form onSubmit={onSubmit} className="space-y-4" noValidate>
               {/* Email */}
               <div>
@@ -155,6 +298,7 @@ export default function Login() {
                     รหัสผ่าน
                   </label>
                   <a
+                    onClick={forgotPassword}
                     href="#"
                     className="text-sm font-medium text-indigo-600 hover:text-indigo-700 focus:text-indigo-700 focus:underline dark:text-indigo-400 dark:hover:text-indigo-300"
                   >
@@ -217,7 +361,7 @@ export default function Login() {
               </div>
 
               {/* Remember me */}
-              <div className="flex items-center justify-between pt-2">
+              {/* <div className="flex items-center justify-between pt-2">
                 <label className="inline-flex cursor-pointer items-center gap-2 text-sm text-slate-600 dark:text-slate-400">
                   <input
                     type="checkbox"
@@ -226,14 +370,14 @@ export default function Login() {
                   />
                   จดจำฉันไว้ในระบบ
                 </label>
-              </div>
+              </div> */}
 
               {/* Submit */}
               <motion.button
                 whileTap={{ scale: 0.98 }}
                 type="submit"
                 disabled={loading}
-                className="group relative inline-flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-br from-indigo-600 to-sky-600 px-4 py-3 text-white shadow-lg shadow-indigo-600/30 outline-none ring-indigo-300 transition hover:shadow-xl focus:ring-4 disabled:opacity-70"
+                className="group relative inline-flex w-full items-center justify-center gap-2 rounded-xl bg-linear-to-br from-indigo-600 to-sky-600 px-4 py-3 text-white shadow-lg shadow-indigo-600/30 outline-none ring-indigo-300 transition hover:shadow-xl focus:ring-4 disabled:opacity-70"
               >
                 {loading ? (
                   <span className="inline-flex items-center gap-2 text-sm font-semibold">
@@ -277,6 +421,7 @@ export default function Login() {
                 </a>{" "}
                 และ
                 <a
+                  onClick={Privacynoti}
                   href="#"
                   className="ml-1 underline decoration-dotted underline-offset-4 hover:decoration-solid"
                 >

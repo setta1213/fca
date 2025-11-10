@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import Swal from "sweetalert2";
 import { Link, useNavigate } from "react-router-dom";
 
+
 export default function Register() {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);

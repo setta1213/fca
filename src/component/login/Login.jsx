@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import Swal from "sweetalert2";
 import { Link, useNavigate } from "react-router-dom";
+import "./LoginStyle.css";
 
 export default function Login() {
   const navigate = useNavigate();
@@ -116,7 +117,7 @@ export default function Login() {
       icon: "warning",
       title: "นโยบายความเป็นส่วนตัว",
       html: `
- <section class="privacy-policy">
+ <section class="privacy-policy swal2-scroll">
   <h2>นโยบายความเป็นส่วนตัว (Privacy Policy)</h2>
   <p>เว็บไซต์นี้ให้ความสำคัญกับความเป็นส่วนตัวของผู้ใช้งาน และมุ่งมั่นในการปกป้องข้อมูลส่วนบุคคลของคุณอย่างปลอดภัย โปรดอ่านนโยบายนี้เพื่อเข้าใจวิธีการที่เราเก็บ ใช้ และปกป้องข้อมูลของคุณ</p>
 
@@ -165,12 +166,14 @@ export default function Login() {
   <p>เราขอสงวนสิทธิ์ในการปรับปรุงนโยบายนี้โดยไม่ต้องแจ้งล่วงหน้า โดยจะแสดงวันที่แก้ไขล่าสุดไว้ด้านล่าง</p>
   <p><strong>วันที่แก้ไขล่าสุด:</strong> 9 พฤศจิกายน 2568</p>
 </section>`,
+
     });
   };
   const openPolicy = () => {
     Swal.fire({
       title: "ข้อตกลงการใช้งาน",
       html: `
+      <div class="swal2-scroll">
         <p>โปรดอ่านข้อตกลงการใช้งานอย่างละเอียดก่อนใช้บริการของเรา...</p>
         <p>1. การยอมรับข้อตกลง
 ผู้ใช้งานตกลงที่จะปฏิบัติตามข้อกำหนด เงื่อนไข และนโยบายต่าง ๆ ที่ระบุไว้ในเว็บไซต์นี้ หากไม่ยอมรับข้อตกลง กรุณาหยุดการใช้งานเว็บไซต์ทัน
@@ -215,6 +218,7 @@ export default function Login() {
 หากเว็บไซต์ของคุณมีบริการเฉพาะ เช่น การสมัครสมาชิก การซื้อขาย หรือระบบล็อกอิน แจ้งผมเพิ่มเติมได้เลยครับ ผมจะช่วยปรับข้อตกลงให้เหมาะสมกับระบบของคุณมากขึ้น เช่นเพิ่มเงื่อนไขการชำระเงิน การยกเลิกบัญชี หรือข้อจำกัดความรับผิดชอบ.
 
 </p>
+</div>
       `,
       width: "600px",
       confirmButtonText: "ยอมรับ",

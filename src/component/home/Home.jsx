@@ -1,15 +1,20 @@
 
+import { useState } from "react";
 import { useLocation, Navigate, useNavigate } from "react-router-dom";
 import HomeNav from "./component/homeNav/HomeNav";
 import Hero from "./component/hero/Hero";
+import Manage from "./component/manage/Manage";
+import ManageClassRoom from "./component/manageClassRoom/ManageClassRoom";
+
+
 
 
 function Home() {
   const location = useLocation();
   const navigate = useNavigate();
+  const [activeView, setActiveView] = useState('checkin'); // Default view
   
-  // 1. Check state first (from login redirect)
-  // 2. If no state, check localStorage (for page refresh)
+ 
   const userFromState = location.state?.user;
   const userFromStorage = JSON.parse(localStorage.getItem("user"));
 
@@ -18,6 +23,10 @@ function Home() {
   const handleLogout = () => {
     localStorage.removeItem("user");
     navigate("/");
+  };
+
+  const handleViewChange = (view) => {
+    setActiveView(view);
   };
 
   if (!user) {
@@ -34,8 +43,16 @@ function Home() {
 
     <div>
       <HomeNav user={user} onLogout={handleLogout}/>
-      <Hero/>
- 
+      <Hero onViewChange={handleViewChange} />
+
+      <main className="p-4 md:p-8">
+        {/* Conditional Rendering based on activeView */}
+        {activeView === 'checkin' && <div>เนื้อหาสำหรับเช็คชื่อนักศึกษา</div>}
+        {activeView === 'records' && <div>เนื้อหาสำหรับรายการบันทึก</div>}
+        {activeView === 'stats' && <div>เนื้อหาสำหรับสถิติ</div>}
+        {activeView === 'manage' && <Manage user={user} />}
+        {activeView === 'manageClassRoom' && <ManageClassRoom user={user} />}
+      </main>
     </div>
   );
 }

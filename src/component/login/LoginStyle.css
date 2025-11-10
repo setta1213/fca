@@ -1,0 +1,6 @@
+.swal2-scroll {
+    background-color: rgb(32, 240, 32);
+    max-height: 200px;
+    overflow-y: auto;
+    text-align: left;
+}

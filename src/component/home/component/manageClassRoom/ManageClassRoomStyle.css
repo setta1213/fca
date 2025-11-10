@@ -1,0 +1,121 @@
+/* Container หลัก */
+.classroom-container {
+  background-color: #ffffff;
+  padding: 2rem;
+  margin: 2rem auto;
+  max-width: 600px;
+  border-radius: 16px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+  font-family: "Sarabun", "Prompt", sans-serif;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.classroom-container:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+}
+
+/* หัวข้อ */
+.classroom-title {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: #1e293b;
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+/* ฟอร์ม */
+.classroom-form {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  margin-bottom: 1.5rem;
+}
+
+.classroom-input {
+  flex: 1;
+  padding: 10px 14px;
+  border-radius: 8px;
+  border: 1px solid #cbd5e1;
+  font-size: 1rem;
+  transition: all 0.2s ease;
+}
+
+.classroom-input:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.25);
+  outline: none;
+}
+
+.classroom-add-btn {
+  background: linear-gradient(90deg, #4f46e5, #3b82f6);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 18px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.25s ease, transform 0.15s ease;
+}
+
+.classroom-add-btn:hover {
+  background: linear-gradient(90deg, #3b82f6, #2563eb);
+  transform: translateY(-2px);
+}
+
+/* รายการห้องเรียน */
+.classroom-list {
+  max-height: 350px;
+  overflow-y: auto;
+  border-top: 1px solid #e2e8f0;
+}
+
+.classroom-list ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.classroom-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 8px;
+  border-bottom: 1px solid #f1f5f9;
+  transition: background 0.2s ease;
+}
+
+.classroom-item:hover {
+  background-color: #f8fafc;
+}
+
+.classroom-name {
+  color: #0f172a;
+  font-weight: 500;
+  font-size: 1rem;
+}
+
+/* ปุ่มลบ */
+.classroom-delete-btn {
+  background-color: #ef4444;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 6px 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+.classroom-delete-btn:hover {
+  background-color: #dc2626;
+  transform: translateY(-1px);
+}
+
+/* ไม่มีข้อมูล */
+.classroom-empty {
+  text-align: center;
+  color: #64748b;
+  padding: 1rem 0;
+  font-style: italic;
+}

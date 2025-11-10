@@ -1,0 +1,117 @@
+/* ---------- พื้นหลังและ Layout ---------- */
+.manage-container {
+  max-width: 720px;
+  margin: 40px auto;
+  background: #ffffff;
+  border-radius: 18px;
+  padding: 30px 40px;
+  box-shadow: 0 10px 25px rgba(37, 99, 235, 0.1);
+  font-family: "Sarabun", "Noto Sans Thai", sans-serif;
+  color: #0f172a;
+  transition: all 0.3s ease;
+}
+
+.manage-container:hover {
+  box-shadow: 0 12px 28px rgba(37, 99, 235, 0.15);
+}
+
+/* ---------- หัวข้อหลัก ---------- */
+.manage-container h3 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+  color: #1e3a8a;
+  text-align: center;
+  border-bottom: 2px solid #e2e8f0;
+  padding-bottom: 10px;
+}
+
+/* ---------- ปุ่ม ---------- */
+.manage-btn {
+  background: linear-gradient(135deg, #2563eb, #1d4ed8);
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 600;
+  margin-left: 8px;
+  transition: 0.25s;
+}
+
+.manage-btn:hover {
+  background: linear-gradient(135deg, #1d4ed8, #1e40af);
+  transform: translateY(-1px);
+}
+
+/* ---------- อินพุต ---------- */
+.manage-container input[type="text"] {
+  width: 100%;
+  border: 1px solid #d1d5db;
+  border-radius: 10px;
+  padding: 10px 14px;
+  margin: 8px 0 12px;
+  font-size: 0.95rem;
+  transition: border-color 0.2s ease;
+}
+
+.manage-container input[type="text"]:focus {
+  outline: none;
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+}
+
+/* ---------- Label ---------- */
+.select-label {
+  display: block;
+  font-weight: 600;
+  color: #334155;
+  margin-top: 15px;
+  margin-bottom: 5px;
+}
+
+/* ---------- Select Box ---------- */
+.select-box {
+  width: 100%;
+  padding: 10px 14px;
+  border: 1px solid #d1d5db;
+  border-radius: 10px;
+  background: #f9fafb;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.select-box:hover {
+  background: #f1f5f9;
+}
+
+.select-box:focus {
+  outline: none;
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+}
+
+/* ---------- ฟอร์มจัดเรียง ---------- */
+.manage-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* ---------- ปรับขนาดสำหรับมือถือ ---------- */
+@media (max-width: 600px) {
+  .manage-container {
+    padding: 20px;
+  }
+
+  .manage-container h3 {
+    font-size: 1.25rem;
+  }
+
+  .manage-btn {
+    width: 100%;
+    margin-top: 5px;
+  }
+}

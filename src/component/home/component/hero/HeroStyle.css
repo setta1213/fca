@@ -1,5 +1,5 @@
 .heroButton {
-    background: linear-gradient(to right, rgba(255, 0, 0, 0.5), rgba(178, 178, 180, 0.5));
+    background: linear-gradient(135deg, #ff33cc 0%, #c24c69 100%);
     color: white;
     padding: 10px 20px;
     border: none;
@@ -8,13 +8,16 @@
     font-size: 16px;
     transition: 1s;
 }
+
 .heroButton:hover {
-    transform: scale(1.05); /* ขยายขนาดขึ้น 5% */
+    transform: scale(1.05);
+   
     transition: all 0.3s ease;
 
 }
-.hero{
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      padding: 10px;
-      box-shadow:0 4px 15;
+
+.hero {
+    background: linear-gradient(135deg, #ff33cc 0%, #9900ff 100%);
+    padding: 10px;
+    box-shadow: 0 4px 15;
 }

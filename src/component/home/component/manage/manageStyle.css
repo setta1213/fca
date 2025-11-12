@@ -115,3 +115,11 @@
     margin-top: 5px;
   }
 }
+
+.content {
+      display: none;
+      padding: 10px;
+      border: 1px solid #ccc;
+      margin-top: 10px;
+
+}

@@ -1,257 +1,363 @@
+/* HeroStyle.css */
 .hero {
-    background: linear-gradient(135deg, #ff33cc 0%, #ff66cc 25%, #ff99cc 50%, #ff33cc 75%, #9900ff 100%);
-    padding: 20px;
-    box-shadow: 
-        0 10px 30px rgba(255, 51, 204, 0.3),
-        0 5px 15px rgba(255, 102, 204, 0.2),
-        inset 0 1px 0 rgba(255, 255, 255, 0.2);
-    border-radius: 20px;
-    position: relative;
-    overflow: hidden;
-    animation: gradientShift 8s ease infinite;
-    background-size: 200% 200%;
+  background: linear-gradient(135deg, #ff33cc 0%, #ff66cc 25%, #ff33cc 50%, #cc0099 75%, #9900ff 100%);
+  padding: 30px 20px;
+  box-shadow: 
+    0 10px 30px rgba(255, 51, 204, 0.3),
+    0 5px 15px rgba(153, 0, 255, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  border-radius: 24px;
+  position: relative;
+  overflow: hidden;
+  animation: heroGradientShift 8s ease infinite;
+  background-size: 200% 200%;
+  margin: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
 }
 
 .hero::before {
-    content: '';
-    position: absolute;
-    top: -50%;
-    left: -50%;
-    width: 200%;
-    height: 200%;
-    background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 70%);
-    animation: sparkle 4s linear infinite;
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(45deg, transparent 30%, rgba(255, 255, 255, 0.1) 50%, transparent 70%);
+  animation: heroShimmer 4s ease-in-out infinite;
+  pointer-events: none;
 }
 
 .hero::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: linear-gradient(45deg, transparent 30%, rgba(255,255,255,0.1) 50%, transparent 70%);
-    animation: shimmer 3s ease-in-out infinite;
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0) 70%);
+  animation: heroSparkle 6s linear infinite;
+  pointer-events: none;
 }
 
 .heroButton {
-    background: linear-gradient(135deg, #ff33cc 0%, #ff66cc 25%, #ff33cc 50%, #e60099 75%, #cc0099 100%);
-    color: white;
-    padding: 15px 30px;
-    border: none;
-    border-radius: 15px;
-    margin-top: 15px;
-    font-size: 18px;
-    font-weight: 600;
-    letter-spacing: 0.5px;
-    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    box-shadow: 
-        0 8px 25px rgba(255, 51, 204, 0.4),
-        0 4px 15px rgba(204, 0, 153, 0.3),
-        inset 0 1px 0 rgba(255, 255, 255, 0.3),
-        inset 0 -2px 0 rgba(0, 0, 0, 0.1);
-    position: relative;
-    overflow: hidden;
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
-    background-size: 200% 200%;
-    animation: buttonGlow 3s ease-in-out infinite;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0.1) 100%);
+  color: white;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  padding: 16px 24px;
+  border-radius: 16px;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 600;
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  backdrop-filter: blur(15px);
+  width: 100%;
+  max-width: 280px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  position: relative;
+  overflow: hidden;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+  box-shadow: 
+    0 8px 25px rgba(255, 51, 204, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3),
+    inset 0 -2px 0 rgba(0, 0, 0, 0.1);
+  animation: buttonGlow 3s ease-in-out infinite;
 }
 
 .heroButton::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-    transition: left 0.6s ease;
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.6s ease;
 }
 
 .heroButton:hover {
-    transform: 
-        scale(1.08) 
-        translateY(-3px);
-    box-shadow: 
-        0 15px 35px rgba(255, 51, 204, 0.6),
-        0 8px 20px rgba(204, 0, 153, 0.4),
-        inset 0 1px 0 rgba(255, 255, 255, 0.4),
-        inset 0 -2px 0 rgba(0, 0, 0, 0.1);
-    animation: none;
-    background-position: 100% 100%;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.3) 0%, rgba(255, 255, 255, 0.2) 100%);
+  border-color: rgba(255, 255, 255, 0.5);
+  transform: translateY(-3px) scale(1.05);
+  box-shadow: 
+    0 15px 35px rgba(255, 51, 204, 0.5),
+    0 8px 20px rgba(153, 0, 255, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.4),
+    inset 0 -2px 0 rgba(0, 0, 0, 0.1);
+  animation: none;
 }
 
 .heroButton:hover::before {
-    left: 100%;
+  left: 100%;
 }
 
 .heroButton:active {
-    transform: 
-        scale(1.02) 
-        translateY(-1px);
-    box-shadow: 
-        0 5px 15px rgba(255, 51, 204, 0.4),
-        0 2px 8px rgba(204, 0, 153, 0.3),
-        inset 0 1px 0 rgba(255, 255, 255, 0.3);
-    transition: all 0.1s ease;
+  transform: translateY(-1px) scale(1.02);
+  transition: all 0.1s ease;
+}
+
+.heroButton svg {
+  width: 20px;
+  height: 20px;
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.2));
+  transition: transform 0.3s ease;
+}
+
+.heroButton:hover svg {
+  transform: scale(1.2);
 }
 
 /* Animations */
-@keyframes gradientShift {
-    0% {
-        background-position: 0% 50%;
-    }
-    50% {
-        background-position: 100% 50%;
-    }
-    100% {
-        background-position: 0% 50%;
-    }
+@keyframes heroGradientShift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
 }
 
 @keyframes buttonGlow {
-    0%, 100% {
-        box-shadow: 
-            0 8px 25px rgba(255, 51, 204, 0.4),
-            0 4px 15px rgba(204, 0, 153, 0.3),
-            inset 0 1px 0 rgba(255, 255, 255, 0.3),
-            inset 0 -2px 0 rgba(0, 0, 0, 0.1);
-    }
-    50% {
-        box-shadow: 
-            0 8px 30px rgba(255, 51, 204, 0.6),
-            0 4px 20px rgba(204, 0, 153, 0.4),
-            inset 0 1px 0 rgba(255, 255, 255, 0.3),
-            inset 0 -2px 0 rgba(0, 0, 0, 0.1);
-    }
+  0%, 100% {
+    box-shadow: 
+      0 8px 25px rgba(255, 51, 204, 0.3),
+      inset 0 1px 0 rgba(255, 255, 255, 0.3),
+      inset 0 -2px 0 rgba(0, 0, 0, 0.1);
+  }
+  50% {
+    box-shadow: 
+      0 8px 30px rgba(255, 51, 204, 0.5),
+      inset 0 1px 0 rgba(255, 255, 255, 0.3),
+      inset 0 -2px 0 rgba(0, 0, 0, 0.1);
+  }
 }
 
-@keyframes sparkle {
-    0% {
-        transform: rotate(0deg);
-    }
-    100% {
-        transform: rotate(360deg);
-    }
+@keyframes heroShimmer {
+  0%, 100% {
+    transform: translateX(-100%);
+  }
+  50% {
+    transform: translateX(100%);
+  }
 }
 
-@keyframes shimmer {
-    0%, 100% {
-        transform: translateX(-100%);
-    }
-    50% {
-        transform: translateX(100%);
-    }
+@keyframes heroSparkle {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
-/* เพิ่มลูกเล่นพิเศษสำหรับ text */
-.heroText {
-    color: white;
-    text-shadow: 
-        0 2px 10px rgba(255, 51, 204, 0.5),
-        0 4px 20px rgba(153, 0, 255, 0.3);
-    position: relative;
-    z-index: 2;
+/* Floating particles */
+.hero-particle {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.6);
+  border-radius: 50%;
+  animation: heroFloat 8s ease-in-out infinite;
+  z-index: 1;
+}
+
+@keyframes heroFloat {
+  0%, 100% {
+    transform: translateY(0) translateX(0);
+    opacity: 0;
+  }
+  50% {
+    transform: translateY(-30px) translateX(15px);
+    opacity: 1;
+  }
 }
 
 /* Responsive Design */
 @media (max-width: 768px) {
-    .hero {
-        padding: 15px;
-        border-radius: 15px;
-    }
-    
-    .heroButton {
-        padding: 12px 25px;
-        font-size: 16px;
-    }
-    
-    .heroButton:hover {
-        transform: scale(1.05) translateY(-2px);
-    }
+  .hero {
+    padding: 24px 16px;
+    margin: 15px;
+    border-radius: 20px;
+  }
+
+  .heroButton {
+    padding: 14px 20px;
+    font-size: 0.95rem;
+    max-width: 100%;
+    min-height: 60px;
+  }
+
+  .heroButton svg {
+    width: 18px;
+    height: 18px;
+  }
 }
 
 @media (max-width: 480px) {
-    .hero {
-        padding: 12px;
-        border-radius: 12px;
-    }
+  .hero {
+    padding: 20px 12px;
+    margin: 10px;
+    border-radius: 16px;
+  }
 
-    .heroButton {
-        padding: 10px 20px;
-        font-size: 15px;
-    }
+  .heroButton {
+    padding: 12px 16px;
+    font-size: 0.9rem;
+    min-height: 56px;
+    gap: 10px;
+  }
+
+  .heroButton svg {
+    width: 16px;
+    height: 16px;
+  }
 }
 
-/* Optional: Add floating particles */
-.heroParticle {
-    position: absolute;
-    width: 4px;
-    height: 4px;
-    background: rgba(255, 255, 255, 0.6);
-    border-radius: 50%;
-    animation: float 6s ease-in-out infinite;
+@media (max-width: 768px) and (orientation: landscape) {
+  .hero {
+    padding: 16px 12px;
+  }
+  
+  .heroButton {
+    padding: 10px 14px;
+    min-height: 50px;
+  }
 }
 
-@keyframes float {
-    0%, 100% {
-        transform: translateY(0) translateX(0);
-        opacity: 0;
-    }
-    50% {
-        transform: translateY(-20px) translateX(10px);
-        opacity: 1;
-    }
-}
-/* Extra mobile optimization */
-@media (max-width: 600px) {
-    .hero {
-        padding: 10px;
-        border-radius: 12px;
-        background-size: 250% 250%;
-        animation: gradientShift 10s ease infinite; /* ลดความเร็วเพื่อลื่นขึ้นบนมือถือ */
-    }
-
-    .heroText {
-        font-size: 1rem;
-        line-height: 1.4;
-        text-align: center;
-    }
-
-    .heroButton {
-        padding: 10px 20px;
-        font-size: 14px;
-        border-radius: 12px;
-        width: 100%;            /* ⭐ ปุ่มเต็มความกว้างบนมือถือ */
-        max-width: 280px;       /* ⭐ แต่ไม่ใหญ่เกิน */
-        margin: 10px auto 0;    /* ⭐ จัดกลางอัตโนมัติ */
-        display: block;
-        animation: buttonGlow 4s ease-in-out infinite;
-    }
-
-    .heroButton:hover {
-        transform: scale(1.03) translateY(-1px); /* ลด effect hover บนมือถือ */
-    }
-
-    .heroParticle {
-        width: 3px;
-        height: 3px;
-        animation-duration: 8s; /* ลดการเคลื่อนไหวเพื่อประหยัดแบต */
-    }
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  .hero {
+    background: linear-gradient(135deg, #ff33cc 0%, #ff66cc 25%, #ff33cc 50%, #cc0099 75%, #9900ff 100%);
+    box-shadow: 
+      0 10px 30px rgba(255, 51, 204, 0.4),
+      0 5px 15px rgba(153, 0, 255, 0.3),
+      inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  }
 }
 
-/* Ultra small screens */
-@media (max-width: 360px) {
-    .hero {
-        padding: 8px;
-    }
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .hero {
+    animation: none;
+  }
+  
+  .heroButton {
+    animation: none;
+    transition: all 0.2s ease;
+  }
+  
+  .heroButton:hover {
+    transform: none;
+  }
+  
+  .hero::before,
+  .hero::after,
+  .heroButton::before {
+    animation: none;
+    display: none;
+  }
+  
+  .heroButton:hover svg {
+    transform: none;
+  }
+}
 
-    .heroButton {
-        padding: 8px 16px;
-        font-size: 13px;
-    }
+/* High contrast support */
+@media (prefers-contrast: high) {
+  .hero {
+    border: 2px solid white;
+  }
+  
+  .heroButton {
+    border: 3px solid white;
+    background: rgba(255, 255, 255, 0.9);
+    color: #000;
+  }
+}
 
-    .heroText {
-        font-size: 0.9rem;
-    }
+/* เพิ่มลงใน HeroStyle.css */
+
+/* Mobile Menu Styles */
+.mobile-menu-button {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0.7) 100%);
+  backdrop-filter: blur(10px);
+  transition: all 0.3s ease;
+}
+
+.mobile-menu-button:hover {
+  transform: translateX(8px);
+  box-shadow: 0 5px 15px rgba(255, 51, 204, 0.3);
+}
+
+/* Animation for dropdown */
+.mobile-dropdown-enter {
+  max-height: 0;
+  opacity: 0;
+}
+
+.mobile-dropdown-enter-active {
+  max-height: 500px;
+  opacity: 1;
+  transition: max-height 0.5s ease, opacity 0.5s ease;
+}
+
+.mobile-dropdown-exit {
+  max-height: 500px;
+  opacity: 1;
+}
+
+.mobile-dropdown-exit-active {
+  max-height: 0;
+  opacity: 0;
+  transition: max-height 0.5s ease, opacity 0.5s ease;
+}
+
+/* Enhanced responsive design */
+@media (max-width: 480px) {
+  .hero {
+    padding: 20px 15px;
+  }
+  
+  .mobile-menu-button {
+    padding: 16px 12px;
+  }
+  
+  .mobile-menu-button span {
+    font-size: 0.9rem;
+  }
+}
+
+/* Dark mode support for mobile menu */
+@media (prefers-color-scheme: dark) {
+  .mobile-menu-button {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
+    color: white;
+  }
+  
+  .mobile-menu-button span {
+    color: white;
+  }
+}
+
+/* Ensure proper z-index for dropdown */
+.hero {
+  z-index: 10;
+  position: relative;
+}
+
+/* Backdrop effect when menu is open */
+.menu-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 9;
 }

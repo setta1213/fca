@@ -49,6 +49,7 @@ export default function Login() {
       if (Array.isArray(userId)) {
         userId = userId[0];
       }
+      
       if (userType === "0") {
         Swal.fire({
           icon: "error",

@@ -110,14 +110,7 @@ function Manage({ user, onSelect }) {
     }
   };
 
-  const showdiv = (e) => {
-    resetForm();
-    const divs = document.querySelectorAll(".content");
-    divs.forEach((div) => {
-      div.style.display = "none";
-    });
-    document.getElementById(e).style.display = "block";
-  };
+
 
   // ฟอร์มแสดงผล
   return (

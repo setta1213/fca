@@ -7,6 +7,8 @@ import ManageClassRoom from "./component/manageClassRoom/ManageClassRoom";
 import Attendance from "./component/attendance/Attendance";
 import AttendanceDashboard from "./component/attendance/AttendanceDashboard";
 import AttendanceReport from "./component/attendance/AttendanceReport";
+import ExamDashboard from "./component/exams/componenct/ExamDashboard";
+import ExamsHome from "./component/exams/ExamsHome";
 
 function Home() {
   const location = useLocation();
@@ -47,6 +49,7 @@ function Home() {
         {activeView === "records" && <AttendanceReport user={user} />}
         {activeView === "manage" && <Manage user={user} />}
         {activeView === "manageClassRoom" && <ManageClassRoom user={user} />}
+        {activeView === "exams" && <ExamsHome user={user} />}
       </main>
     </div>
   );

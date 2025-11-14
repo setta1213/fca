@@ -7,9 +7,9 @@ function Hero({ onViewChange }) {
     <div>
       <div className="hero flex justify-between">
         <div></div>
-        <div className="gap-5 flex"> 
+<div className="gap-3 flex flex-col md:flex-row justify-center items-center w-full">
           <button onClick={() => onViewChange('checkin')} className="heroButton"><FontAwesomeIcon icon={faCircleCheck} /> เช็คชื่อนักศึกษา</button>
-          <button onClick={() => onViewChange('records')} className="heroButton"><FontAwesomeIcon icon={faList} /> รายการบันทึก</button>
+          <button onClick={() => onViewChange('records')} className="heroButton"><FontAwesomeIcon icon={faList} /> รายงานบันทึก</button>
           <button onClick={() => onViewChange('stats')} className="heroButton"><FontAwesomeIcon icon={faChartSimple} /> สถิติ</button>
           <button onClick={() => onViewChange('manage')} className="heroButton"><FontAwesomeIcon icon={faUsers} /> จัดการนักศึกษา</button>
           <button onClick={() => onViewChange('manageClassRoom')} className="heroButton"><FontAwesomeIcon icon={faSchool} />จัดการห้องเรียน</button>

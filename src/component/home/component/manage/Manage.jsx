@@ -4,6 +4,7 @@ import "./manageStyle.css";
 import ClassRoom from "./component/ClassRoom";
 
 function Manage({ user, onSelect }) {
+  const [activeTab, setActiveTab] = useState("classroom");
   const [studentId, setStudentId] = useState("");
   const [studentName, setStudentName] = useState("");
   const [stLevel, setStLevel] = useState("");
@@ -73,6 +74,10 @@ function Manage({ user, onSelect }) {
 
   // ฟังก์ชันบันทึกข้อมูล
   const handleSave = async () => {
+    if (selected === null || selected === "") {
+      alert("กรุณาเลือกห้องเรียน");
+      return;
+    }
     const payload = {
       student_id: studentId,
       student_name: studentName,
@@ -89,7 +94,7 @@ function Manage({ user, onSelect }) {
 
     try {
       const res = await axios.post(
-        "https://agenda.bkkthon.ac.th/fca/api/save_student.php",
+        "https://agenda.bkkthon.ac.th/fca/api/student/save_student.php",
         payload
       );
 
@@ -117,100 +122,126 @@ function Manage({ user, onSelect }) {
   // ฟอร์มแสดงผล
   return (
     <div className="manage-container">
-      <a
-        onClick={() => {
-          showdiv("div1");
-        }}
+      <button
+        onClick={() => setActiveTab("register")}
         className=" text-white bg-linear-to-r from-pink-400 via-pink-500 to-pink-600 hover:bg-linear-to-br focus:ring-4 focus:outline-none focus:ring-green-300 dark:focus:ring-green-800 shadow-lg shadow-green-500/50 dark:shadow-lg dark:shadow-green-800/80 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2"
       >
         ลงทะเบียนนักศึกษา
-      </a>
+      </button>
 
-      <a
-        onClick={() => {
-          showdiv("div2");
-        }}
+      <button
+        onClick={() => setActiveTab("classroom")}
         className=" text-white bg-linear-to-r from-pink-400 via-pink-500 to-pink-600 hover:bg-linear-to-br focus:ring-4 focus:outline-none focus:ring-green-300 dark:focus:ring-green-800 shadow-lg shadow-green-500/50 dark:shadow-lg dark:shadow-green-800/80 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2"
       >
         ห้องเรียน
-      </a>
+      </button>
+      {activeTab === "register" && (
+        <div id="div1" className="content">
+          <h3>{user?.name} เนื้อหาสำหรับจัดการนักศึกษา</h3>
 
-      <div id="div1" className="content">
-        <h3>{user?.name} เนื้อหาสำหรับจัดการนักศึกษา</h3>
+          <div className="manage-form">
+            <input
+              type="text"
+              placeholder="กรอกรหัสนักศึกษา"
+              value={studentId}
+              onChange={(e) => setStudentId(e.target.value)}
+            />
+            <button
+              className="manage-btn"
+              onClick={() => getStudents(studentId)}
+            >
+              🔍 ค้นหา
+            </button>
 
-        <div className="manage-form">
-          <input
-            type="text"
-            placeholder="กรอกรหัสนักศึกษา"
-            value={studentId}
-            onChange={(e) => setStudentId(e.target.value)}
-          />
-          <button className="manage-btn" onClick={() => getStudents(studentId)}>
-            🔍 ค้นหา
-          </button>
+            <input
+              type="text"
+              placeholder="ชื่อ-นามสกุล"
+              value={studentName}
+              readOnly
+            />
+            <input
+              type="text"
+              placeholder="ระดับชั้น"
+              value={stLevel}
+              readOnly
+            />
+            <input type="text" placeholder="สาขา" value={st_course} readOnly />
+            <input type="text" placeholder="คณะ" value={st_faculty} readOnly />
+            <input type="text" placeholder="สถานะ" value={st_status} readOnly />
 
-          <input
-            type="text"
-            placeholder="ชื่อ-นามสกุล"
-            value={studentName}
-            readOnly
-          />
-          <input type="text" placeholder="ระดับชั้น" value={stLevel} readOnly />
-          <input type="text" placeholder="สาขา" value={st_course} readOnly />
-          <input type="text" placeholder="คณะ" value={st_faculty} readOnly />
-          <input type="text" placeholder="สถานะ" value={st_status} readOnly />
+            <input
+              type="text"
+              placeholder="เบอร์โทร (081-234-5678)"
+              value={phone}
+              maxLength={12} // 12 ตัว รวมขีด
+              onChange={(e) => {
+                let val = e.target.value;
 
-          <input
-            type="text"
-            placeholder="เบอร์โทร"
-            value={phone}
-            onChange={(e) => setPhone(e.target.value)}
-          />
-          <input
-            type="text"
-            placeholder="Line ID"
-            value={lineId}
-            onChange={(e) => setLineId(e.target.value)}
-          />
-          <input
-            type="text"
-            placeholder="We chart"
-            value={wechat}
-            onChange={(e) => setWechat(e.target.value)}
-          />
+                // เอาตัวเลขทั้งหมดออกมาก่อน
+                val = val.replace(/\D/g, "");
 
-          <label htmlFor="classroom" className="select-label">
-            เลือกห้องเรียน:
-          </label>
-          <select
-            id="classroom"
-            value={selected}
-            onChange={(e) => {
-              setSelected(e.target.value);
-              if (onSelect) onSelect(e.target.value);
-            }}
-            className="select-box"
-          >
-            <option value="">-- กรุณาเลือก --</option>
-            {classrooms.map((name, index) => (
-              <option key={index} value={name}>
-                {name}
-              </option>
-            ))}
-          </select>
+                // ใส่ขีดรูปแบบ 081-234-5678
+                if (val.length > 3 && val.length <= 6) {
+                  val = val.replace(/(\d{3})(\d+)/, "$1-$2");
+                } else if (val.length > 6) {
+                  val = val.replace(/(\d{3})(\d{3})(\d+)/, "$1-$2-$3");
+                }
 
-          <button
-            type="button"
-            onClick={handleSave}
-            className="text-white bg-linear-to-r from-purple-500 to-pink-500 hover:bg-linear-to-l focus:ring-4 focus:outline-none focus:ring-purple-200 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2"
-          >
-            💾 บันทึกข้อมูล
-          </button>
+                setPhone(val);
+              }}
+              className="your-input-class"
+            />
+
+            <input
+              type="text"
+              placeholder="Line ID"
+              value={lineId}
+              onChange={(e) => setLineId(e.target.value)}
+            />
+            <input
+              type="text"
+              placeholder="We chart"
+              value={wechat}
+              onChange={(e) => setWechat(e.target.value)}
+            />
+
+            <label htmlFor="classroom" className="select-label">
+              เลือกห้องเรียน:
+            </label>
+            <select
+              id="classroom"
+              value={selected}
+              onChange={(e) => {
+                setSelected(e.target.value);
+                if (onSelect) onSelect(e.target.value);
+              }}
+              className="select-box"
+              required={true}
+            >
+              <option value="">-- กรุณาเลือก --</option>
+              {classrooms.map((name, index) => (
+                <option key={index} value={name}>
+                  {name}
+                </option>
+              ))}
+            </select>
+
+            <button
+              type="button"
+              onClick={handleSave}
+              className="text-white bg-linear-to-r from-purple-500 to-pink-500 hover:bg-linear-to-l focus:ring-4 focus:outline-none focus:ring-purple-200 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2"
+            >
+              💾 บันทึกข้อมูล
+            </button>
+          </div>
         </div>
-      </div>
-      <div id="div2" className="content">
-        <ClassRoom />
-      </div>
+      )}
+
+      {activeTab === "classroom" && (
+        <div id="div2" className="content">
+          <ClassRoom />
+        </div>
+      )}
     </div>
   );
 }

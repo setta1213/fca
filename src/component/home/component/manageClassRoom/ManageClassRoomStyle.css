@@ -119,3 +119,25 @@
   padding: 1rem 0;
   font-style: italic;
 }
+
+/* Responsive Design for Mobile */
+@media (max-width: 600px) {
+  .classroom-container {
+    margin: 1rem;
+    padding: 1.5rem;
+  }
+
+  .classroom-title {
+    font-size: 1.4rem;
+  }
+
+  .classroom-form {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .classroom-add-btn {
+    width: 100%;
+    padding: 12px;
+  }
+}

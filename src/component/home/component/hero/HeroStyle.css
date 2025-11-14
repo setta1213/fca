@@ -1,23 +1,257 @@
+.hero {
+    background: linear-gradient(135deg, #ff33cc 0%, #ff66cc 25%, #ff99cc 50%, #ff33cc 75%, #9900ff 100%);
+    padding: 20px;
+    box-shadow: 
+        0 10px 30px rgba(255, 51, 204, 0.3),
+        0 5px 15px rgba(255, 102, 204, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    border-radius: 20px;
+    position: relative;
+    overflow: hidden;
+    animation: gradientShift 8s ease infinite;
+    background-size: 200% 200%;
+}
+
+.hero::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 70%);
+    animation: sparkle 4s linear infinite;
+}
+
+.hero::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(45deg, transparent 30%, rgba(255,255,255,0.1) 50%, transparent 70%);
+    animation: shimmer 3s ease-in-out infinite;
+}
+
 .heroButton {
-    background: linear-gradient(135deg, #ff33cc 0%, #c24c69 100%);
+    background: linear-gradient(135deg, #ff33cc 0%, #ff66cc 25%, #ff33cc 50%, #e60099 75%, #cc0099 100%);
     color: white;
-    padding: 10px 20px;
+    padding: 15px 30px;
     border: none;
-    border-radius: 10px;
-    margin-top: 10px;
-    font-size: 16px;
-    transition: 1s;
+    border-radius: 15px;
+    margin-top: 15px;
+    font-size: 18px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    box-shadow: 
+        0 8px 25px rgba(255, 51, 204, 0.4),
+        0 4px 15px rgba(204, 0, 153, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.3),
+        inset 0 -2px 0 rgba(0, 0, 0, 0.1);
+    position: relative;
+    overflow: hidden;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+    background-size: 200% 200%;
+    animation: buttonGlow 3s ease-in-out infinite;
+}
+
+.heroButton::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.6s ease;
 }
 
 .heroButton:hover {
-    transform: scale(1.05);
-   
-    transition: all 0.3s ease;
-
+    transform: 
+        scale(1.08) 
+        translateY(-3px);
+    box-shadow: 
+        0 15px 35px rgba(255, 51, 204, 0.6),
+        0 8px 20px rgba(204, 0, 153, 0.4),
+        inset 0 1px 0 rgba(255, 255, 255, 0.4),
+        inset 0 -2px 0 rgba(0, 0, 0, 0.1);
+    animation: none;
+    background-position: 100% 100%;
 }
 
-.hero {
-    background: linear-gradient(135deg, #ff33cc 0%, #9900ff 100%);
-    padding: 10px;
-    box-shadow: 0 4px 15;
+.heroButton:hover::before {
+    left: 100%;
+}
+
+.heroButton:active {
+    transform: 
+        scale(1.02) 
+        translateY(-1px);
+    box-shadow: 
+        0 5px 15px rgba(255, 51, 204, 0.4),
+        0 2px 8px rgba(204, 0, 153, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.3);
+    transition: all 0.1s ease;
+}
+
+/* Animations */
+@keyframes gradientShift {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+@keyframes buttonGlow {
+    0%, 100% {
+        box-shadow: 
+            0 8px 25px rgba(255, 51, 204, 0.4),
+            0 4px 15px rgba(204, 0, 153, 0.3),
+            inset 0 1px 0 rgba(255, 255, 255, 0.3),
+            inset 0 -2px 0 rgba(0, 0, 0, 0.1);
+    }
+    50% {
+        box-shadow: 
+            0 8px 30px rgba(255, 51, 204, 0.6),
+            0 4px 20px rgba(204, 0, 153, 0.4),
+            inset 0 1px 0 rgba(255, 255, 255, 0.3),
+            inset 0 -2px 0 rgba(0, 0, 0, 0.1);
+    }
+}
+
+@keyframes sparkle {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes shimmer {
+    0%, 100% {
+        transform: translateX(-100%);
+    }
+    50% {
+        transform: translateX(100%);
+    }
+}
+
+/* เพิ่มลูกเล่นพิเศษสำหรับ text */
+.heroText {
+    color: white;
+    text-shadow: 
+        0 2px 10px rgba(255, 51, 204, 0.5),
+        0 4px 20px rgba(153, 0, 255, 0.3);
+    position: relative;
+    z-index: 2;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .hero {
+        padding: 15px;
+        border-radius: 15px;
+    }
+    
+    .heroButton {
+        padding: 12px 25px;
+        font-size: 16px;
+    }
+    
+    .heroButton:hover {
+        transform: scale(1.05) translateY(-2px);
+    }
+}
+
+@media (max-width: 480px) {
+    .hero {
+        padding: 12px;
+        border-radius: 12px;
+    }
+
+    .heroButton {
+        padding: 10px 20px;
+        font-size: 15px;
+    }
+}
+
+/* Optional: Add floating particles */
+.heroParticle {
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    background: rgba(255, 255, 255, 0.6);
+    border-radius: 50%;
+    animation: float 6s ease-in-out infinite;
+}
+
+@keyframes float {
+    0%, 100% {
+        transform: translateY(0) translateX(0);
+        opacity: 0;
+    }
+    50% {
+        transform: translateY(-20px) translateX(10px);
+        opacity: 1;
+    }
+}
+/* Extra mobile optimization */
+@media (max-width: 600px) {
+    .hero {
+        padding: 10px;
+        border-radius: 12px;
+        background-size: 250% 250%;
+        animation: gradientShift 10s ease infinite; /* ลดความเร็วเพื่อลื่นขึ้นบนมือถือ */
+    }
+
+    .heroText {
+        font-size: 1rem;
+        line-height: 1.4;
+        text-align: center;
+    }
+
+    .heroButton {
+        padding: 10px 20px;
+        font-size: 14px;
+        border-radius: 12px;
+        width: 100%;            /* ⭐ ปุ่มเต็มความกว้างบนมือถือ */
+        max-width: 280px;       /* ⭐ แต่ไม่ใหญ่เกิน */
+        margin: 10px auto 0;    /* ⭐ จัดกลางอัตโนมัติ */
+        display: block;
+        animation: buttonGlow 4s ease-in-out infinite;
+    }
+
+    .heroButton:hover {
+        transform: scale(1.03) translateY(-1px); /* ลด effect hover บนมือถือ */
+    }
+
+    .heroParticle {
+        width: 3px;
+        height: 3px;
+        animation-duration: 8s; /* ลดการเคลื่อนไหวเพื่อประหยัดแบต */
+    }
+}
+
+/* Ultra small screens */
+@media (max-width: 360px) {
+    .hero {
+        padding: 8px;
+    }
+
+    .heroButton {
+        padding: 8px 16px;
+        font-size: 13px;
+    }
+
+    .heroText {
+        font-size: 0.9rem;
+    }
 }

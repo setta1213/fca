@@ -1,9 +1,10 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 
-function ExamAdd() {
+function ExamAdd({user}) {
   const [examName, setExamName] = useState("");
   const [examDate, setExamDate] = useState("");
+
   const [loading, setLoading] = useState(false);
   const [msg, setMsg] = useState(null);
   const [exams, setExams] = useState([]);
@@ -40,6 +41,7 @@ function ExamAdd() {
       const form = new FormData();
       form.append("exam_name", examName);
       form.append("exam_date", examDate);
+      form.append("user_name", user.name);
 
       const res = await axios.post(
         "https://agenda.bkkthon.ac.th/fca/api/exam/add_exam.php",
@@ -107,7 +109,9 @@ function ExamAdd() {
   };
 
   return (
+    
     <div className="min-h-screen bg-linear-to-br from-pink-50 to-purple-50 p-4">
+      user: {user.name}
       <div className="max-w-4xl mx-auto">
         {/* Header */}
         <div className="text-center mb-8">
@@ -228,6 +232,7 @@ function ExamAdd() {
                         </div>
                         
                       </div>
+                      {user.admin_type === "1" && (
                       <button
                         onClick={() => deleteExam(exam.id)}
                         disabled={deleteLoading === exam.id}
@@ -235,6 +240,7 @@ function ExamAdd() {
                       >
                         ลบ
                       </button>
+                      )}
                     </div>
                   </div>
                 ))}

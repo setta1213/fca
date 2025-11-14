@@ -7,8 +7,8 @@ import ManageClassRoom from "./component/manageClassRoom/ManageClassRoom";
 import Attendance from "./component/attendance/Attendance";
 import AttendanceDashboard from "./component/attendance/AttendanceDashboard";
 import AttendanceReport from "./component/attendance/AttendanceReport";
-import ExamDashboard from "./component/exams/componenct/ExamDashboard";
 import ExamsHome from "./component/exams/ExamsHome";
+import AdminUsers from "./component/admin/AdminUsers";
 
 function Home() {
   const location = useLocation();
@@ -40,7 +40,7 @@ function Home() {
   return (
     <div>
       <HomeNav user={user} onLogout={handleLogout} />
-      <Hero onViewChange={handleViewChange} />
+      <Hero user={user} onViewChange={handleViewChange} />
 
       <main className="p-4 md:p-8">
         {/* Conditional Rendering based on activeView */}
@@ -50,6 +50,7 @@ function Home() {
         {activeView === "manage" && <Manage user={user} />}
         {activeView === "manageClassRoom" && <ManageClassRoom user={user} />}
         {activeView === "exams" && <ExamsHome user={user} />}
+        {activeView === "admin" && <AdminUsers user={user} />}
       </main>
     </div>
   );

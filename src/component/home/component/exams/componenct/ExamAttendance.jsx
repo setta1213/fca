@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 
-function ExamAttendance() {
+function ExamAttendance({user}) {
   const [exams, setExams] = useState([]);
   const [selectedExam, setSelectedExam] = useState("");
   const [rooms, setRooms] = useState([]);
@@ -84,7 +84,8 @@ function ExamAttendance() {
           exam_id: selectedExam,
           student_id: studentId,
           room: selectedRoom,
-          status: status, // "present" / "absent"
+          status: status,
+          create_by: user.name,
         },
         { headers: { "Content-Type": "application/json" } }
       );

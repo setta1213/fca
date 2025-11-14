@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import Swal from "sweetalert2";
 import { Link, useNavigate } from "react-router-dom";
 import "./LoginStyle.css";
+import axios from "axios";
 
 export default function Login() {
   const navigate = useNavigate();
@@ -13,11 +14,11 @@ export default function Login() {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
-    
+    setFormData((prev) => ({ ...prev, [name]: value }));
+
     // Clear error when user starts typing
     if (errors[name]) {
-      setErrors(prev => ({ ...prev, [name]: "" }));
+      setErrors((prev) => ({ ...prev, [name]: "" }));
     }
   };
 
@@ -40,15 +41,18 @@ export default function Login() {
 
     setLoading(true);
     try {
-      const res = await fetch("https://agenda.bkkthon.ac.th/fca/api/login.php", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email, password }),
-      });
+      const res = await fetch(
+        "https://agenda.bkkthon.ac.th/fca/api/login.php",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ email, password }),
+        }
+      );
       const data = await res.json();
-      
+
       if (res.status === 200) {
         let userId = data.user.id;
         let userEmail = data.user.email;
@@ -56,28 +60,95 @@ export default function Login() {
         let userLastname = data.user.lastname;
         let userPhone = data.user.phone;
         let userType = data.user.type;
+        let userAdminType = data.user.admin_type;
 
         if (Array.isArray(userId)) {
           userId = userId[0];
         }
+        const resetPassword = async (userId) => {
+            const { value: newPass } = await Swal.fire({
+              title: "รีเซ็ตรหัสผ่าน",
+              input: "password",
+              inputLabel: "กรอกรหัสผ่านใหม่",
+              inputPlaceholder: "ใส่รหัสผ่านใหม่...",
+              inputAttributes: {
+                minlength: 8,
+                autocapitalize: "off",
+                autocorrect: "off",
+              },
+              showCancelButton: true,
+              confirmButtonText: "ยืนยัน",
+              cancelButtonText: "ยกเลิก",
+              preConfirm: (value) => {
+                if (!value) {
+                  Swal.showValidationMessage("กรุณากรอกรหัสผ่านใหม่");
+                } else if (value.length < 8) {
+                  Swal.showValidationMessage(
+                    "รหัสผ่านต้องมีอย่างน้อย 8 ตัวอักษร"
+                  );
+                }
+                return value;
+              },
+            });
+
+            if (!newPass) return; // กดยกเลิก
+
+            const frm = new FormData();
+            frm.append("id", userId);
+            frm.append("type", 1);
+            frm.append("password", newPass);
+
+            try {
+              const res = await axios.post(
+                "https://agenda.bkkthon.ac.th/fca/api/users/reset_password.php",
+                frm
+              );
+
+              if (res.data.status === "success") {
+                Swal.fire({
+                  icon: "success",
+                  title: "สำเร็จ!",
+                  text: "รีเซ็ตรหัสผ่านใหม่เรียบร้อยแล้ว",
+                  timer: 1800,
+                });
+              } else {
+                Swal.fire({
+                  icon: "error",
+                  title: "ผิดพลาด!",
+                  text: res.data.message || "ไม่สามารถรีเซ็ตได้",
+                });
+              }
+            } catch (err) {
+              Swal.fire({
+                icon: "error",
+                title: "Error",
+                text: err||"ไม่สามารถติดต่อเซิร์ฟเวอร์ได้",
+              });
+            }
+          };
         
+
         if (userType === "0") {
           await Swal.fire({
             icon: "error",
             title: "เข้าสู่ระบบสำเร็จ",
-            text: `${data.message}\n${userName} ${userLastname} คุณไม่มีสิทธิ์การเข้าถึงกรุณาติดต่อผู้ดูแลระบบ` || "ยินดีต้อนรับกลับ!",
-            background: '#1e293b',
-            color: '#f8fafc',
-            confirmButtonColor: '#3b82f6',
+            text:
+              `${data.message}\n${userName} ${userLastname} คุณไม่มีสิทธิ์การเข้าถึงกรุณาติดต่อผู้ดูแลระบบ` ||
+              "ยินดีต้อนรับกลับ!",
+            background: "#1e293b",
+            color: "#f8fafc",
+            confirmButtonColor: "#3b82f6",
           });
         } else if (userType === "1") {
           await Swal.fire({
             icon: "success",
             title: "เข้าสู่ระบบสำเร็จ",
-            text: `${data.message} ${userName} ${userLastname}` || "ยินดีต้อนรับกลับ!",
-            background: '#1e293b',
-            color: '#f8fafc',
-            confirmButtonColor: '#10b981',
+            text:
+              `${data.message} ${userName} ${userLastname}` ||
+              "ยินดีต้อนรับกลับ!",
+            background: "#1e293b",
+            color: "#f8fafc",
+            confirmButtonColor: "#10b981",
           });
           const user = {
             id: userId,
@@ -86,18 +157,41 @@ export default function Login() {
             lastname: userLastname,
             phone: userPhone,
             type: userType,
+            admin_type: userAdminType,
           };
           navigate("/home", { state: { user: user } });
+        } else if (userType === "2") {
+           await Swal.fire({
+        icon: "warning",
+        title: "ต้องการรีเซ็ตรหัสผ่าน",
+        text: "บัญชีของคุณจำเป็นต้องตั้งรหัสใหม่",
+        confirmButtonText: "ตั้งรหัสผ่านใหม่",
+        background: "#1e293b",
+        color: "#fff",
+      });
+
+      resetPassword(userId); // ⭐ เรียกฟังก์ชันจริง
+    
         }
+      }
+      else {
+        Swal.fire({
+          icon: "error",
+          title: "เข้าสู่ระบบไม่สำเร็จ",
+          text: data.message || "อีเมลหรือรหัสผ่านไม่ถูกต้อง",
+          background: "#1e293b",
+          color: "#f8fafc",
+          confirmButtonColor: "#ef4444",
+        });
       }
     } catch (error) {
       Swal.fire({
         icon: "error",
         title: "เกิดข้อผิดพลาด",
         text: "ไม่สามารถเชื่อมต่อกับเซิร์ฟเวอร์ได้",
-        background: '#1e293b',
-        color: '#f8fafc',
-        confirmButtonColor: '#ef4444',
+        background: "#1e293b",
+        color: "#f8fafc",
+        confirmButtonColor: "#ef4444",
       });
     } finally {
       setLoading(false);
@@ -112,8 +206,8 @@ export default function Login() {
       showCancelButton: false,
       confirmButtonColor: "#3b82f6",
       confirmButtonText: "ยืนยัน",
-      background: '#1e293b',
-      color: '#f8fafc',
+      background: "#1e293b",
+      color: "#f8fafc",
     });
   };
 
@@ -132,10 +226,10 @@ export default function Login() {
           </div>
         </div>
       `,
-      background: '#1e293b',
-      color: '#f8fafc',
-      confirmButtonColor: '#3b82f6',
-      width: '500px',
+      background: "#1e293b",
+      color: "#f8fafc",
+      confirmButtonColor: "#3b82f6",
+      width: "500px",
     });
   };
 
@@ -152,10 +246,10 @@ export default function Login() {
           </div>
         </div>
       `,
-      background: '#1e293b',
-      color: '#f8fafc',
-      confirmButtonColor: '#3b82f6',
-      width: '500px',
+      background: "#1e293b",
+      color: "#f8fafc",
+      confirmButtonColor: "#3b82f6",
+      width: "500px",
     });
   };
 
@@ -190,7 +284,10 @@ export default function Login() {
           >
             <div className="relative inline-block mb-6">
               <div className="w-20 h-20 bg-linear-to-br from-blue-500 to-yellow-100 rounded-2xl flex items-center justify-center shadow-2xl shadow-blue-500/30">
-               <img src="https://bkkthon.ac.th/home/template_front/images/logo.png" alt="" />
+                <img
+                  src="https://bkkthon.ac.th/home/template_front/images/logo.png"
+                  alt=""
+                />
               </div>
               <div className="absolute -inset-1 bg-linear-to-r from-blue-600 to-purple-600 rounded-2xl blur opacity-30"></div>
             </div>
@@ -222,26 +319,44 @@ export default function Login() {
                     value={formData.email}
                     onChange={handleInputChange}
                     className={`w-full px-4 py-3 bg-slate-900/50 border rounded-xl text-slate-100 placeholder-slate-500 outline-none transition-all duration-200 ${
-                      errors.email 
-                        ? "border-rose-500 focus:border-rose-400 focus:ring-2 focus:ring-rose-400/20" 
+                      errors.email
+                        ? "border-rose-500 focus:border-rose-400 focus:ring-2 focus:ring-rose-400/20"
                         : "border-slate-600 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
                     }`}
                     placeholder="your@email.com"
                   />
                   <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
-                    <svg className="w-5 h-5 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207" />
+                    <svg
+                      className="w-5 h-5 text-slate-500"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207"
+                      />
                     </svg>
                   </div>
                 </div>
                 {errors.email && (
-                  <motion.p 
+                  <motion.p
                     initial={{ opacity: 0, height: 0 }}
-                    animate={{ opacity: 1, height: 'auto' }}
+                    animate={{ opacity: 1, height: "auto" }}
                     className="mt-2 text-sm text-rose-400 flex items-center gap-1"
                   >
-                    <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                      <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
+                    <svg
+                      className="w-4 h-4"
+                      fill="currentColor"
+                      viewBox="0 0 20 20"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
+                        clipRule="evenodd"
+                      />
                     </svg>
                     {errors.email}
                   </motion.p>
@@ -269,8 +384,8 @@ export default function Login() {
                     value={formData.password}
                     onChange={handleInputChange}
                     className={`w-full px-4 py-3 bg-slate-900/50 border rounded-xl text-slate-100 placeholder-slate-500 outline-none transition-all duration-200 ${
-                      errors.password 
-                        ? "border-rose-500 focus:border-rose-400 focus:ring-2 focus:ring-rose-400/20" 
+                      errors.password
+                        ? "border-rose-500 focus:border-rose-400 focus:ring-2 focus:ring-rose-400/20"
                         : "border-slate-600 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
                     }`}
                     placeholder="••••••••"
@@ -281,25 +396,58 @@ export default function Login() {
                     className="absolute right-3 top-1/2 transform -translate-y-1/2 text-slate-500 hover:text-slate-300 transition-colors duration-200"
                   >
                     {showPassword ? (
-                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" />
+                      <svg
+                        className="w-5 h-5"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"
+                        />
                       </svg>
                     ) : (
-                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                      <svg
+                        className="w-5 h-5"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                        />
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+                        />
                       </svg>
                     )}
                   </button>
                 </div>
                 {errors.password && (
-                  <motion.p 
+                  <motion.p
                     initial={{ opacity: 0, height: 0 }}
-                    animate={{ opacity: 1, height: 'auto' }}
+                    animate={{ opacity: 1, height: "auto" }}
                     className="mt-2 text-sm text-rose-400 flex items-center gap-1"
                   >
-                    <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                      <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
+                    <svg
+                      className="w-4 h-4"
+                      fill="currentColor"
+                      viewBox="0 0 20 20"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
+                        clipRule="evenodd"
+                      />
                     </svg>
                     {errors.password}
                   </motion.p>
@@ -316,16 +464,42 @@ export default function Login() {
               >
                 {loading ? (
                   <>
-                    <svg className="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    <svg
+                      className="animate-spin h-5 w-5 text-white"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                    >
+                      <circle
+                        className="opacity-25"
+                        cx="12"
+                        cy="12"
+                        r="10"
+                        stroke="currentColor"
+                        strokeWidth="4"
+                      ></circle>
+                      <path
+                        className="opacity-75"
+                        fill="currentColor"
+                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                      ></path>
                     </svg>
                     กำลังเข้าสู่ระบบ...
                   </>
                 ) : (
                   <>
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
+                    <svg
+                      className="w-5 h-5"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"
+                      />
                     </svg>
                     เข้าสู่ระบบ
                   </>

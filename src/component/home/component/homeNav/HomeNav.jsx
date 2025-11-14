@@ -13,7 +13,7 @@ function HomeNav({ user, onLogout }) {
       <div className="user-info flex flex-col md:flex-row items-center justify-between text-center md:text-left gap-4 md:gap-0">
         <div>
           <h2>
-            ยินดีต้อนรับคุณ <br />
+            ยินดีต้อนรับคุณ<br />
             <span className="user-name">
               {user.name} {user.lastname}
             </span>

@@ -44,7 +44,7 @@ function Attendance() {
   const loadAttendanceToday = async () => {
     const res = await axios.get(
       "https://agenda.bkkthon.ac.th/fca/api/attendance/get_attendance_by_date.php?date=" +
-        selectedDate
+      selectedDate
     );
     if (res.data.status === "success") {
       setAttendance(res.data.data);
@@ -107,6 +107,26 @@ function Attendance() {
       badge: "bg-blue-100 text-blue-800 border-blue-200"
     }
   };
+
+  const undoAttendance = async (student_id) => {
+    setActionLoading(student_id);
+    try {
+      await axios.post(
+        "https://agenda.bkkthon.ac.th/fca/api/attendance/delete_attendance.php",
+        {
+          student_id,
+          date: selectedDate,
+          room: selectedRoom,
+        },
+        { headers: { "Content-Type": "application/json" } }
+      );
+
+      await loadAttendanceToday();
+    } finally {
+      setActionLoading(null);
+    }
+  };
+
 
   return (
     <div className="min-h-screen bg-linear-to-br from-blue-50 to-indigo-100 p-6">
@@ -251,9 +271,8 @@ function Attendance() {
                 {studentChecked.map((st) => (
                   <div
                     key={st.student_id}
-                    className={`p-4 rounded-xl border-l-4 ${
-                      statusConfig[st.status]?.badge
-                    } border shadow-sm`}
+                    className={`p-4 rounded-xl border-l-4 ${statusConfig[st.status]?.badge
+                      } border shadow-sm`}
                   >
                     <div className="flex items-center justify-between">
                       <div>
@@ -263,15 +282,17 @@ function Attendance() {
                           {statusConfig[st.status]?.label}
                         </p>
                       </div>
-                      <div className="text-right">
-                        <p className="text-xs text-gray-500">
-                          เช็คชื่อแล้ว
-                        </p>
-                      </div>
+                      <button
+                        onClick={() => undoAttendance(st.student_id)}
+                        disabled={actionLoading === st.student_id}
+                        className="px-3 py-1 bg-orange-500 hover:bg-orange-600 text-white rounded-lg text-sm font-medium disabled:opacity-50"
+                      >
+                        🔄 แก้ไข
+                      </button>
                     </div>
                   </div>
                 ))}
-                
+
                 {studentChecked.length === 0 && (
                   <div className="text-center py-8">
                     <div className="text-4xl mb-2">📊</div>

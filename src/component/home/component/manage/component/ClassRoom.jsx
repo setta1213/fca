@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 
-function ClassRoom() {
+function ClassRoom({ user }) {
   const [students, setStudents] = useState([]);
   const [rooms, setRooms] = useState([]);
   const [classroomList, setClassroomList] = useState([]);
@@ -24,7 +24,7 @@ function ClassRoom() {
         "https://agenda.bkkthon.ac.th/fca/api/classroom/get_classroom.php"
       );
       if (res.data.status === "success") setClassroomList(res.data.data);
-    } catch {}
+    } catch { }
   };
 
   const loadStudents = async () => {
@@ -124,10 +124,10 @@ function ClassRoom() {
       }));
       setRooms(updatedRooms);
 
- 
+
       setFilteredStudents([]);
 
-   
+
       setSelectedRoom("");
 
       setTimeout(() => {
@@ -196,11 +196,10 @@ function ClassRoom() {
           <button
             key={index}
             onClick={() => handleSelectRoom(room.name)}
-            className={`rounded-xl px-4 py-3 shadow-md border text-left transition-all duration-200 ${
-              selectedRoom === room.name
-                ? "bg-blue-600 text-white border-blue-700 shadow-lg scale-105"
-                : "bg-white text-blue-700 border-blue-300 hover:bg-blue-100"
-            }`}
+            className={`rounded-xl px-4 py-3 shadow-md border text-left transition-all duration-200 ${selectedRoom === room.name
+              ? "bg-blue-600 text-white border-blue-700 shadow-lg scale-105"
+              : "bg-white text-blue-700 border-blue-300 hover:bg-blue-100"
+              }`}
           >
             <div className="font-semibold text-lg">{room.name}</div>
             <div className="text-sm opacity-75">👥 {room.count} คน</div>
@@ -225,17 +224,17 @@ function ClassRoom() {
                   key={st.id}
                   className="p-4 rounded-xl shadow-md bg-white border border-gray-200 hover:shadow-lg transition-all"
                 >
-                  <p className="font-semibold text-lg text-gray-800">
-                    {st.student_name}
-                  </p>
-                  <p className="text-sm text-gray-600">รหัส: {st.student_id}</p>
-                  <p className="text-sm text-gray-600">สาขา: {st.course}</p>
-                  <p className="text-sm text-gray-600">คณะ: {st.faculty}</p>
-                  <p className="text-sm text-gray-600">เบอร์โทร {st.phone}</p>
-
+                  {st.student_name && (<p className="font-semibold text-lg text-gray-800">{st.student_name}</p>)}
+                  {st.student_id && (<p className="text-sm text-gray-600">รหัส: {st.student_id}</p>)}
+                  {st.course && (<p className="text-sm text-gray-600">สาขา: {st.course}</p>)}
+                  {st.faculty && (<p className="text-sm text-gray-600">คณะ: {st.faculty}</p>)}
+                  {st.phone && (<p className="text-sm text-gray-600">Phone: {st.phone}</p>)}
+                  {st.line_id && (<p className="text-sm text-gray-600">Line: {st.line_id}</p>)}
+                  {st.wechat && (<p className="text-sm text-gray-600">Wechat: {st.wechat}</p>)}
                   {/* ปุ่มลบ & ย้าย */}
                   <div className="flex gap-2 mt-3">
-                    <button
+                    {user.admin_type === "1" && (
+                      <button
                       onClick={() => deleteStudent(st.student_id)}
                       className="px-3 py-1 rounded-lg bg-red-500 text-white hover:bg-red-600 flex items-center justify-center"
                       disabled={actionLoading === st.student_id}
@@ -243,9 +242,10 @@ function ClassRoom() {
                       {actionLoading === st.student_id ? (
                         <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
                       ) : (
-                        "🗑 ลบ"
+                        "🗑 ลบ "
                       )}
-                    </button>
+                    </button>)}
+
 
                     <button
                       onClick={() => setShowMovePanel(st.student_id)}

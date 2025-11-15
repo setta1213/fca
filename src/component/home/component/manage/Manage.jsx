@@ -232,7 +232,7 @@ function Manage({ user, onSelect }) {
 
       {activeTab === "classroom" && (
         <div id="div2" className="content">
-          <ClassRoom />
+          <ClassRoom  user={user}/>
         </div>
       )}
     </div>

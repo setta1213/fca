@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
 import "./ManageClassRoomStyle.css"; // ✅ เพิ่มไฟล์ CSS
 
-function ManageClassRoom() {
+function ManageClassRoom({ user }) {
   const [classrooms, setClassrooms] = useState([]);
   const [newClassroom, setNewClassroom] = useState("");
 
   const fetchData = () => {
-   fetch("https://agenda.bkkthon.ac.th/fca/api/classroom/get_classroom.php")
+    fetch("https://agenda.bkkthon.ac.th/fca/api/classroom/get_classroom.php")
       .then((res) => res.json())
       .then((data) => {
         if (data.status === "success") setClassrooms(data.data);
@@ -92,12 +92,14 @@ function ManageClassRoom() {
             classrooms.map((name, index) => (
               <li key={index} className="classroom-item">
                 <span className="classroom-name">{name}</span>
-                <button
-                  onClick={() => handleDelete(name)}
-                  className="classroom-delete-btn"
-                >
-                  🗑 ลบ
-                </button>
+                {user.admin_type === "1" && (
+                  <button
+                    onClick={() => handleDelete(name)}
+                    className="classroom-delete-btn"
+                  >
+                    🗑 ลบ
+                  </button>
+                )}
               </li>
             ))
           ) : (

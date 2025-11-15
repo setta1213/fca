@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import "./ManageClassRoomStyle.css"; // ✅ เพิ่มไฟล์ CSS
+import ManageSubject from "./managesubject/ManageSubject";
 
 function ManageClassRoom({ user }) {
   const [classrooms, setClassrooms] = useState([]);
@@ -107,7 +108,9 @@ function ManageClassRoom({ user }) {
           )}
         </ul>
       </div>
+      <ManageSubject user={user} />
     </div>
+    
   );
 }
 

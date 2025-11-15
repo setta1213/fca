@@ -5,7 +5,7 @@ import Home from "./component/home/Home";
 
 function App() {
   return (
-    <BrowserRouter>
+    <BrowserRouter basename="/fca/main/">
       <Routes>
         <Route path="/" element={<Login />} />
         <Route path="/register" element={<Register />} />
